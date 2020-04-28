@@ -8,37 +8,38 @@ import './App.css';
 export const App2 = observer(() => {
 
   const hook = useApp();
-  
-  return ( 
 
-  <div id='app-root'>
-    <div className='car-purchase-main-logo'>
-      Welcome to Crazy Ivan Motors
+  return (
+
+    <div id='app-root'>
+      <div className='car-purchase-main-logo'>
+        Crazy Ivan Motors (Hooks V2)
     </div>
 
-    <div className='tabs'>
-      <button
-        className='button-add-new-deal'
-        onClick={hook.handleAddNewDealClick}
-      >
-        Add deal
+      <div className='tabs'>
+        <button
+          className='button-add-new-deal'
+          onClick={hook.handleAddNewDealClick}
+        >
+          Add deal
       </button>
+        {
+          hook.deals.map(deal => (
+            <div
+              className={`deal-tab-header ${deal.id === hook.activeDealId ? 'active' : ''}`}
+              key={deal.id}
+              onClick={() => hook.handleSelectDealClick(deal.id)}
+            >
+              {deal.id}
+            </div>
+          ))
+        }
+      </div>
+
       {
-        hook.deals.map(deal => (
-          <div
-            className={`deal-tab-header ${deal.id === hook.activeDealId ? 'active' : ''}`}
-            key={deal.id}
-            onClick={() => hook.handleSelectDealClick(deal.id)}
-          >
-            {deal.id}
-          </div>
-        ))
+        hook.activeDealId && <CarPurchase2 />
       }
+
     </div>
-
-    {
-      hook.activeDealId && <CarPurchase2 />
-    }
-
-  </div>
-)})
+  )
+})
