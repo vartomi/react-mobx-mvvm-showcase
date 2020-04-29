@@ -13,16 +13,16 @@ export const useInsurancePlanSelector = () => {
         selectedItems: deal.selectedInsurancePlans,
         isDisabled: deal.isFinalized,
         handleSelect(items: InsurancePlan[]) {
-            deal.setSelectedInsurancePlans(items)
-            deal.setApprovalStatus({ isApproved: false })
+            deal.set.selectedInsurancePlans(items)
+            deal.set.approvalStatus({ isApproved: false })
             const finalPrice = calculateFinalPrice(deal.carModel, items);
-            
+
             if (!finalPrice) {
-                deal.setIsValid(true);
+                deal.set.isValid(true);
             } else if (deal.carModel && deal.downpayment > finalPrice) {
-                deal.setIsValid(false);
+                deal.set.isValid(false);
             } else {
-                deal.setIsValid(true);
+                deal.set.isValid(true);
             }
         },
         handleClick: plans.reloadAvailableInsurancePlans

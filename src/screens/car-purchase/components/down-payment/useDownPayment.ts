@@ -9,23 +9,23 @@ export const useDownPayment = () => {
     const [message, setMessage] = useState<string>('');
 
     const deal = useDeal();
-    
+
     const setMinimumPossibleDownpayment = async (): Promise<void> => {
         if (!deal.carModel) {
             return;
         }
         setIsLoading(true);
-        deal.setIsLoading(true);
+        deal.set.isLoading(true);
         try {
             const result = await financingClient.getMinimumPossibleDownpayment(
                 deal.carModel,
                 deal.selectedInsurancePlans.map(plan => plan.type)
             );
             setValue(result.toString());
-            deal.setDownpayment(result);
+            deal.set.downpayment(result);
         } finally {
             setIsLoading(false);
-            deal.setIsLoading(false);
+            deal.set.isLoading(false);
         }
     }
 
@@ -53,7 +53,7 @@ export const useDownPayment = () => {
         const nextValue = deal.downpayment.toString();
         setValue(nextValue);
         setMessage('');
-        deal.setIsValid(true);
+        deal.set.isValid(true);
     }
 
     useEffect(() => {
@@ -67,21 +67,21 @@ export const useDownPayment = () => {
         message,
         handleClick: async () => {
             await setMinimumPossibleDownpayment();
-            deal.setIsValid(true);
+            deal.set.isValid(true);
             setMessage('');
-            deal.setApprovalStatus({ isApproved: false });
+            deal.set.approvalStatus({ isApproved: false });
         },
         handleChange(event: React.ChangeEvent<HTMLInputElement>) {
             setValue(event.target.value);
         },
         handleBlur(_event: React.ChangeEvent<HTMLInputElement>) {
             if (value === '') {
-                deal.setDownpayment(0);
-                deal.setApprovalStatus({ isApproved: false });
+                deal.set.downpayment(0);
+                deal.set.approvalStatus({ isApproved: false });
                 return;
             }
 
-            
+
             const transformedValue: string = value.trim()
                 .replace('k', '000')
                 .replace('K', '000')
@@ -89,29 +89,29 @@ export const useDownPayment = () => {
                 .replace('M', '000000');
 
             if (transformedValue[0] === '-') {
-                deal.setIsValid(false);
-                deal.setApprovalStatus({ isApproved: false });
+                deal.set.isValid(false);
+                deal.set.approvalStatus({ isApproved: false });
                 setMessage('Value must be 0 or positive');
                 return;
             }
 
             const isInteger = /^\d+$/.test(transformedValue) === true;
             if (!isInteger) {
-                deal.setIsValid(false);
-                deal.setApprovalStatus({ isApproved: false });
+                deal.set.isValid(false);
+                deal.set.approvalStatus({ isApproved: false });
                 setMessage('Please enter a valid integer');
                 return;
             }
 
             const parsedInteger = parseInt(transformedValue);
             setValue(parsedInteger.toString());
-            deal.setDownpayment(parsedInteger);
+            deal.set.downpayment(parsedInteger);
             if (!passesFinalPriceCheck(parsedInteger)) {
-                deal.setIsValid(false);
+                deal.set.isValid(false);
             } else {
-                deal.setIsValid(true);
+                deal.set.isValid(true);
             };
-            deal.setApprovalStatus({ isApproved: false });
+            deal.set.approvalStatus({ isApproved: false });
         }
     }
 }

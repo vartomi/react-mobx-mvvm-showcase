@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { defaultInsurancePlansContext } from './defaultInsurancePlans';
 import { useDeal } from '../Deal/Deal.Context';
-import {  InsurancePlan, carInsuranceClient } from '../../api/CarInsurance.Client';
+import { InsurancePlan, carInsuranceClient } from '../../api/CarInsurance.Client';
 
 export type IInsurancePlansContext = {
-    insurancePlans:  InsurancePlan[],
+    insurancePlans: InsurancePlan[],
     isLoading: boolean,
     setIsLoading: (value: boolean) => void,
     reloadAvailableInsurancePlans: () => void
@@ -17,20 +17,20 @@ interface IInsurancePlansContextProps {
 }
 
 export const InsurancePlansProvider: React.FC<IInsurancePlansContextProps> = (props) => {
-    const [insurancePlans, setInsurancePlans] = useState< InsurancePlan[]>([]);
+    const [insurancePlans, setInsurancePlans] = useState<InsurancePlan[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const deal = useDeal();
 
     const reloadAvailableInsurancePlans = async () => {
         setIsLoading(true);
-        deal.setIsLoading(true);
+        deal.set.isLoading(true);
         try {
-            const result:  InsurancePlan[] = await carInsuranceClient.getAvaliableInsurancePlans();
+            const result: InsurancePlan[] = await carInsuranceClient.getAvaliableInsurancePlans();
             setInsurancePlans(result);
         } finally {
             setIsLoading(false);
-            deal.setIsLoading(false);
+            deal.set.isLoading(false);
         }
     }
 
@@ -39,15 +39,15 @@ export const InsurancePlansProvider: React.FC<IInsurancePlansContextProps> = (pr
     }, [])
 
     return <InsurancePlansContext.Provider
-                value={{
-                    isLoading,
-                    setIsLoading,
-                    insurancePlans,
-                    reloadAvailableInsurancePlans
-                }}
-            >
-                {props.children}
-            </InsurancePlansContext.Provider>
-} 
+        value={{
+            isLoading,
+            setIsLoading,
+            insurancePlans,
+            reloadAvailableInsurancePlans
+        }}
+    >
+        {props.children}
+    </InsurancePlansContext.Provider>
+}
 
 export const useInsurancePlans = () => useContext(InsurancePlansContext);

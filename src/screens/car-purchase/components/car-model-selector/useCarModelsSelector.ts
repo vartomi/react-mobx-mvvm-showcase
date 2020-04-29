@@ -13,17 +13,17 @@ export const useCarModelsSelector = () => {
         availableItems: carModels.carModels,
         selectedItem: deal.carModel,
         handleSelect(item: CarModel) {
-            deal.setCarModel(item)
+            deal.set.carModel(item)
             const finalPrice = calculateFinalPrice(item, deal.selectedInsurancePlans);
-            
+
             if (!finalPrice) {
-                deal.setIsValid(true);
+                deal.set.isValid(true);
             } else if (item && deal.downpayment > finalPrice) {
-                deal.setIsValid(false);
+                deal.set.isValid(false);
             } else {
-                deal.setIsValid(true);
+                deal.set.isValid(true);
             }
-            deal.setApprovalStatus({ isApproved: false })
+            deal.set.approvalStatus({ isApproved: false })
         },
         handleClick: carModels.reloadAvailableModels
     }

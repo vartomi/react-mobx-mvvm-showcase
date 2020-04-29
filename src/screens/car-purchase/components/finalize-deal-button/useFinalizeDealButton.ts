@@ -19,9 +19,9 @@ export const useFinalizeDealButton = () => {
                 return;
             }
 
-            deal.setIsLoading(true);
-            deal.setMessages([]);
-    
+            deal.set.isLoading(true);
+            deal.set.messages([]);
+
             try {
                 const result = await financingClient.finalizeFinancing(
                     deal.approvalStatus.approvalToken,
@@ -29,13 +29,13 @@ export const useFinalizeDealButton = () => {
                 );
 
                 if (!result) {
-                    deal.setMessages(['Deal finalization failed.']);
+                    deal.set.messages(['Deal finalization failed.']);
                     return;
                 }
-                deal.setIsFinalized(true);
+                deal.set.isFinalized(true);
             }
             finally {
-                deal.setIsLoading(false);
+                deal.set.isLoading(false);
             }
         },
         isFinalizeDealButtonDisabled

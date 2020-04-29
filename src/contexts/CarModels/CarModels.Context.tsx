@@ -24,13 +24,13 @@ export const CarModelsProvider: React.FC<ICarModelsContextProps> = (props) => {
 
     const reloadAvailableModels = async () => {
         setIsLoading(true);
-        deal.setIsLoading(true);
+        deal.set.isLoading(true);
         try {
             const result = await carInvenotryClient.getAvaliableCarModels();
             setCarModels(result);
         } finally {
             setIsLoading(false);
-            deal.setIsLoading(false);
+            deal.set.isLoading(false);
         }
     }
 
@@ -39,15 +39,15 @@ export const CarModelsProvider: React.FC<ICarModelsContextProps> = (props) => {
     }, [])
 
     return <CarModelsContext.Provider
-                value={{
-                    isLoading,
-                    setIsLoading,
-                    carModels,
-                    reloadAvailableModels
-                }}
-            >
-                {props.children}
-            </CarModelsContext.Provider>
-} 
+        value={{
+            isLoading,
+            setIsLoading,
+            carModels,
+            reloadAvailableModels
+        }}
+    >
+        {props.children}
+    </CarModelsContext.Provider>
+}
 
 export const useCarModels = () => useContext(CarModelsContext);

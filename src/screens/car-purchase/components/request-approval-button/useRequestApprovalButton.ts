@@ -20,43 +20,43 @@ export const useRequestApprovalButton = () => {
             if (!deal.carModel) {
                 return;
             }
-            deal.setIsLoading(true);
+            deal.set.isLoading(true);
             try {
                 const result = await financingClient.getApproval(
                     deal.carModel,
                     deal.selectedInsurancePlans.map(plan => plan.type),
                     deal.downpayment
                 );
-            
+
                 if (result.isApproved && !result.expiration) {
-                    deal.setApprovalStatus({
+                    deal.set.approvalStatus({
                         isApproved: true,
                         approvalToken: result.approvalToken
                     })
-                    deal.setMessages([]);
+                    deal.set.messages([]);
                     return;
-                } 
+                }
 
-                if (result.isApproved && !!result.expiration) {              
-                    deal.setApprovalStatus({
+                if (result.isApproved && !!result.expiration) {
+                    deal.set.approvalStatus({
                         isApproved: true,
                         expiration: result.expiration,
                         isExpired: false,
                         approvalToken: result.approvalToken,
                     })
-                    deal.setMessages([]);
-                } 
+                    deal.set.messages([]);
+                }
 
                 if (!result.isApproved) {
-                    deal.setApprovalStatus({
+                    deal.set.approvalStatus({
                         isApproved: false
                     });
-                    deal.setMessages([result.message]);
+                    deal.set.messages([result.message]);
                 }
-                
+
 
             } finally {
-                deal.setIsLoading(false)
+                deal.set.isLoading(false)
             }
 
         },

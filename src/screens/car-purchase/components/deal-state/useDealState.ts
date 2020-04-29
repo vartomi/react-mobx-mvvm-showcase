@@ -58,7 +58,7 @@ export const useDealState = () => {
         setTimeRemaining(nextValue);
 
         if (hasDateExpired(deal.approvalStatus.expiration)) {
-            deal.setApprovalStatus({
+            deal.set.approvalStatus({
                 ...deal.approvalStatus,
                 isExpired: true
             })
