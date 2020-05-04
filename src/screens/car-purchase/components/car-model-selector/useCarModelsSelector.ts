@@ -1,7 +1,7 @@
 import { useDeal } from "../../../../contexts/Deal/Deal.Context";
 import { useCarModels } from "../../../../contexts/CarModels/CarModels.Context";
 import { CarModel } from "../../../../api/CarInventory.Client";
-import { calculateFinalPrice } from "../../../../contexts/Deal/Deal.Sync";
+import { calculateisValidAndApproval } from "../../../../contexts/Deal/Deal.Sync";
 
 export const useCarModelsSelector = () => {
     const deal = useDeal();
@@ -14,16 +14,10 @@ export const useCarModelsSelector = () => {
         selectedItem: deal.carModel,
         handleSelect(item: CarModel) {
             deal.setCarModel(item)
-            const finalPrice = calculateFinalPrice(item, deal.selectedInsurancePlans);
-            
-            if (!finalPrice) {
-                deal.setIsValid(true);
-            } else if (item && deal.downpayment > finalPrice) {
-                deal.setIsValid(false);
-            } else {
-                deal.setIsValid(true);
-            }
-            deal.setApprovalStatus({ isApproved: false })
+
+            calculateisValidAndApproval(deal, {
+                carModel: item
+            });
         },
         handleClick: carModels.reloadAvailableModels
     }
