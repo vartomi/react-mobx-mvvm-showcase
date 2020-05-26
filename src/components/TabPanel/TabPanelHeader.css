@@ -1,0 +1,27 @@
+.tab-panel-header {
+    min-height: 50px;
+}
+
+.tab-panel-header button {
+    height: 100%;
+}
+
+.tab-panel-header > div {
+    display: inline-block;
+    min-width: 50px;
+    padding: 0 8px;
+}
+
+.tab-panel-header-close-icon {
+    margin-left: 20px;
+}
+
+.tab-panel-header > div.active {
+    font-weight: bold;
+    border-bottom: 1px solid black;
+}
+
+.tab-panel-header > div:hover {
+    background: whitesmoke;
+    cursor: pointer;
+}

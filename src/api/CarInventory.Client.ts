@@ -10,7 +10,7 @@ class CarInventoryClient {
 
     public async getAvaliableCarModels(): Promise<CarModel[]> {
         console.log(`server call getAvaliableCarModels`);
-        await delay(500);
+        await delay(1000);
         return [
             {
                 id: 1,
