@@ -2,8 +2,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 
 import './App.css';
-import { TabPanel } from './components/TabPanel/TabPanel';
 import store from './store';
+import { CarDealTabPanel } from './components/CarDealTabPanel/CarDealTabPanel';
 
 export const App = () => {
   return (
@@ -14,7 +14,7 @@ export const App = () => {
         </div>
 
         <div className='screens'>
-          <TabPanel />
+          <CarDealTabPanel />
         </div>
       </div>
     </Provider>

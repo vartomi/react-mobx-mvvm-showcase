@@ -1,8 +1,15 @@
-.car-deal-tab-property-label, .car-deal-tab-property-input {
-    display: inline-block;
-    min-width: 200px;
+.car-deal-tab-property-label,
+.car-deal-tab-property-input,
+.car-deal-tab-property-button {
+   flex: 1;
 }
 
-.car-deal-tab-property-input {
+.car-deal-tab-container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+}
 
+.car-deal-tab-container > div {
+    display: flex;
 }

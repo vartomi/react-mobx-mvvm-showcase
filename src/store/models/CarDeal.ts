@@ -1,8 +1,14 @@
+import { CarModel } from "../../api/CarInventory.Client";
+import { financingClient } from "../../api/Financing.Client";
+
+export type SelectedCarModel = CarModel | null;
+
 export type CarDeal = {
     id: number,
-    selectedModelId: number | null,
+    selectedModel: SelectedCarModel,
     selectedInsuranceId: number | null,
-    downPayment: number | null,
+    downpayment: number | null,
+    minimumDownpayment: number,
     finalPrice: number | null,
 }
 
@@ -24,18 +30,29 @@ export const carDeal = {
                     id: state.deals.length,
                     selectedModelId: null,
                     selectedInsuranceId: null,
-                    downPayment: null,
+                    downpayment: null,
                     finalPrice: null,
                 }]
             }
         },
 
-        updateDeal(state: CarDealState, deal: CarDeal) {
+        changeDeal(state: CarDealState, deal: CarDeal) {
             return { deals: [...state.deals.map(d => d.id !== deal.id ? d : deal)] }
         },
 
         removeDeal(state: CarDealState, id: number) {
             return { deals: [...state.deals.filter(d => d.id !== id)] }
         }
-    }
+    },
+
+    effects: (dispatch: any) => ({
+        async updateDeal(deal: CarDeal) {
+            if (deal.selectedModel) {
+                const minimumDownpayment = await financingClient.getMinimumPossibleDownpayment(<CarModel>deal.selectedModel, []);
+                deal.minimumDownpayment = minimumDownpayment;
+            }
+
+            dispatch.carDeal.changeDeal(deal);
+        },
+    })
 }
