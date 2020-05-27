@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { iRootState, Dispatch } from '../../store';
 import { InsurancePlan } from '../../api/CarInsurance.Client';
@@ -16,11 +16,11 @@ export const CarInsuranceInput: React.FC<CarInsuranceInputProps> = ({ selectedIn
         loadAvailableInsurances();
     }, []);
 
-    const setSelectedInsurances = ({ target: { options } }: React.ChangeEvent<HTMLSelectElement>) => {
+    const setSelectedInsurances = useCallback(({ target: { options } }: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedOptions = Array.from(options).filter(option => option.selected).map(option => +option.value);
         const selectedInsurances = availableInsurances.filter(insurance => selectedOptions.includes(insurance.id));
         onSelect(selectedInsurances);
-    };
+    }, [availableInsurances]);
 
     return (
         <div>

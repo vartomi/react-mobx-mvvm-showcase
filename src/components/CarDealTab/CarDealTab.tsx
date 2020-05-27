@@ -4,22 +4,14 @@ import React, { useEffect, useState } from 'react';
 import './CarDealTab.css';
 import { CarModelInput } from './CarModelInput';
 import { CarInsuranceInput } from './CarInsuranceInput';
-import { CarDeal, SelectedCarModel } from '../../store/models/CarDeal';
+import { CarDeal, SelectedCarModel, getFinalPrice } from '../../store/models/CarDeal';
 import { Dispatch } from '../../store';
 import { useDispatch, useSelector } from 'react-redux';
 import { CarDownpaymentInput } from './CarDownpaymentInput';
 import { InsurancePlan } from '../../api/CarInsurance.Client';
-import { CarModel } from '../../api/CarInventory.Client';
 
 type CarDealTabProps = {
     deal: CarDeal,
-}
-
-const getFinalPrice = (deal: CarDeal) => {
-    const basePrice: number = deal.selectedModel?.basePrice || 0;
-    const insuranceRates = deal.selectedInsurances.map(insurance => insurance.rate);
-    const finalPrice = basePrice + insuranceRates.reduce((a, b) => a + (basePrice * b), 0)
-    return finalPrice;
 }
 
 export const CarDealTab: React.FC<CarDealTabProps> = ({ deal }) => {

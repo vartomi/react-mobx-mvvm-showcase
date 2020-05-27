@@ -53,3 +53,10 @@ export const carDeal = {
         },
     })
 }
+
+export const getFinalPrice = (deal: CarDeal) => {
+    const basePrice: number = deal.selectedModel?.basePrice || 0;
+    const insuranceRates = deal.selectedInsurances.map(insurance => insurance.rate);
+    const finalPrice = basePrice + insuranceRates.reduce((a, b) => a + (basePrice * b), 0)
+    return finalPrice;
+}
