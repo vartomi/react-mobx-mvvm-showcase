@@ -1,38 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { CarDealTab } from '../CarDealTab/CarDealTab';
 import { useSelector, useDispatch } from 'react-redux';
 import { iRootState, Dispatch } from '../../store';
-import { CarDeal } from '../../store/models/CarDeal';
+import { CarDeal, mapDealToTabHeader } from '../../store/models/CarDeal';
 import { TabPanel } from '../TabPanel/TabPanel';
+import { CarDealTab } from '../CarDealTab/CarDealTab';
 
 export const CarDealTabPanel: React.FC = () => {
-    const [selectedTab, setSelectedTab]: [number, any] = useState(0);
+    const [selectedTab, setSelectedTab]: [string, any] = useState('');
     const carDeals: CarDeal[] = useSelector((state: iRootState) => state.carDeal.deals);
-    const { carDeal: { createNewDeal, removeDeal } }: Dispatch = useDispatch();
-
-    const addNewTab = () => {
-        createNewDeal();
-    };
-
-    const closeTab = (index: number) => {
-        removeDeal(index);
-    };
+    const { carDeal: { createNewDealForeign, createNewDealCh, removeDeal } }: Dispatch = useDispatch();
 
     useEffect(() => {
         if (carDeals.length < 1) return;
-        if (!carDeals.map(deal => deal.id).includes(selectedTab)) {
+        if (!selectedTab || !carDeals.map(deal => deal.id).includes(selectedTab)) {
             setSelectedTab(carDeals[0].id);
         }
-    }, [carDeals.length])
+    }, [carDeals, selectedTab])
 
     return (
         <TabPanel>
             <TabPanel.Header
-                tabs={carDeals.map((deal: CarDeal) => ({ id: deal.id, title: deal.selectedModel?.description || '' }))}
+                tabs={carDeals.map(mapDealToTabHeader)}
                 activeTab={selectedTab}
                 setSelectedTab={setSelectedTab}
-                onAddTab={addNewTab}
-                onCloseTab={closeTab} />
+                buttons={[
+                    {
+                        title: 'Add deal',
+                        callback: createNewDealCh
+                    },
+                    {
+                        title: 'Add foreign currency deal',
+                        callback: createNewDealForeign
+                    }
+                ]}
+                onCloseTab={removeDeal}/>
             <TabPanel.Body>
                 {carDeals
                     .filter((carDeal: CarDeal) => carDeal.id === selectedTab)

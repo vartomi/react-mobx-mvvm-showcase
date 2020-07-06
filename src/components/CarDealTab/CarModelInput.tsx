@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { CarModel } from '../../api/CarInventory.Client';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, iRootState } from '../../store';

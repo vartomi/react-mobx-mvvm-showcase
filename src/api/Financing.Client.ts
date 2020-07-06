@@ -2,6 +2,7 @@ import { delay } from "../util/delay";
 import { InsurancePlanType } from "./CarInsurance.Client";
 import { CarModel } from "./CarInventory.Client";
 import moment from 'moment';
+import { Currency } from "../store/models/CarDealForeign";
 
 export type FinancingApproved = {
     isApproved: true,
@@ -36,7 +37,8 @@ class FinancingClient {
 
     public async getMinimumPossibleDownpayment(
         carModel: CarModel,
-        insurancePlans: InsurancePlanType[]): Promise<number> {
+        insurancePlans: InsurancePlanType[],
+        currency?: Currency): Promise<number> {
 
         console.log(`server call getMinimumPossibleDownpayment`);
 

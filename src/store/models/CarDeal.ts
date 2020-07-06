@@ -1,23 +1,31 @@
 import { CarModel } from "../../api/CarInventory.Client";
-import { financingClient } from "../../api/Financing.Client";
-import { InsurancePlan } from "../../api/CarInsurance.Client";
+import { CarDealForeign, Currency } from "./CarDealForeign";
+import { CarDealCh } from "./CarDealCh";
 
 export type SelectedCarModel = CarModel | null;
 
-export type CarDeal = {
-    id: number,
-    selectedModel: SelectedCarModel,
-    selectedInsurances: InsurancePlan[],
-    downpayment: number | null,
-    minimumDownpayment: number,
-    finalPrice: number | null,
-}
+export type CarDeal = CarDealCh | CarDealForeign;
 
 type CarDeals = {
     deals: CarDeal[]
 }
 
+export enum DealType {
+    DealCh,
+    DealForeign
+}
+
 export type CarDealState = CarDeals;
+
+export const mapDealToTabHeader = (deal: CarDeal) => {
+    const currency = (deal as CarDealForeign).currency || '';
+    const tabName = deal.selectedModel?.description || `Deal ${deal.id.split('-')[1]}`;
+
+    return {
+        id: deal.id,
+        title: [tabName, currency].join(' ')
+    }
+}
 
 export const carDeal = {
     state: {
@@ -25,14 +33,29 @@ export const carDeal = {
     },
 
     reducers: {
-        createNewDeal(state: CarDealState) {
+        createNewDealCh(state: CarDealState) {
             return {
                 deals: [...state.deals, {
-                    id: state.deals.length,
+                    id: `cardealch-${state.deals.length}`,
                     selectedModel: null,
                     selectedInsurances: [],
                     downpayment: null,
                     finalPrice: null,
+                    type: DealType.DealCh
+                }]
+            }
+        },
+
+        createNewDealForeign(state: CarDealState) {
+            return {
+                deals: [...state.deals, {
+                    id: `cardealforeign-${state.deals.length}`,
+                    selectedModel: null,
+                    selectedInsurances: [],
+                    downpayment: null,
+                    currency: Currency.EUR,
+                    finalPrice: null,
+                    type: DealType.DealForeign
                 }]
             }
         },
@@ -41,22 +64,10 @@ export const carDeal = {
             return { deals: [...state.deals.map(d => d.id !== deal.id ? d : deal)] }
         },
 
-        removeDeal(state: CarDealState, id: number) {
+        removeDeal(state: CarDealState, id: string) {
+            console.log(state.deals, id)
             return { deals: [...state.deals.filter(d => d.id !== id)] }
         }
     },
-
-    effects: (dispatch: any) => ({
-        async updateSelectedModel(deal: CarDeal) {
-            const minimumDownpayment = deal.selectedModel ? await financingClient.getMinimumPossibleDownpayment(<CarModel>deal.selectedModel, []) : null;
-            dispatch.carDeal.changeDeal({ ...deal, minimumDownpayment });
-        },
-    })
 }
 
-export const getFinalPrice = (deal: CarDeal) => {
-    const basePrice: number = deal.selectedModel?.basePrice || 0;
-    const insuranceRates = deal.selectedInsurances.map(insurance => insurance.rate);
-    const finalPrice = basePrice + insuranceRates.reduce((a, b) => a + (basePrice * b), 0)
-    return finalPrice;
-}
